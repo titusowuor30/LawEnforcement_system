@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% block content %}
+     <!-- Main content -->
+     <div class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Recent Cases</h5>
+                <p class="card-text">
+                  View , manage and runsearch depending on your clearance level
+                </p>
+                {% for case in recent_cases %}
+                {% if case not in secret_cases %}
+                <div class="card-container">
+                  <div class="card-body">
+                    <h5 class="card-title" style="text-align: center;"><a href="admin/management/crime/{{case.id}}/">{{case.title}}</a></h5>
+                     <p class="card-desc" style="padding: 10px;text-align: left;font-size: 18px;">{{case.description}}</p>
+                     <div class="card-image">
+                      <img src="{{case.scene_image.url}}" alt="scene" class="mr-3" style="width: 50%;">
+                     </div>
+                  </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+                <a href="admin/management/crime/" class="card-link">Run Search</a>
+                <a href="admin/management/crime/{{current_case.id}}/" class="card-link">Current Case</a>
+              </div>
+            </div>
+
+            <div class="card card-primary card-outline">
+              <div class="card-body">
+                <h5 class="card-title">Crime History</h5>
+                <br>
+                <div style="overflow-x:auto;">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Title</th>
+                        <th>Location</th>
+                        <th>Time</th>
+                        <th>Top Suspect</th>
+                        <th>Suspect Image</th>
+                        <th>Scene Image</th>
+                    </thead>
+                    <tbody>
+                      {% for case in case_history %}
+                      <tr>
+                       <td>{{forloop.counter}}</td>
+                       <td><a href="admin/management/crime/{{case.id}}/">{{case.title}}</a></td>
+                       <td>{{case.location}}</td>
+                       <td>{{case.time}}</td>
+                       <td><a href="admin/management/subjects/{{case.suspect.id_no}}/">{{case.suspect}}</a></td>
+                       <td>
+                         <img src="{{case.suspect.image.url}}" alt="User Avatar" class="img-size-50 mr-3">
+                        </td>
+                        <td>
+                          <img src="{{case.scene_image.url}}" alt="scene" class="img-size-50 mr-3">
+                         </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div><!-- /.card -->
+          </div>
+          <!-- /.col-md-6 -->
+          <div class="col-lg-6">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="m-0">Featured Cases</h5>
+              </div>
+              {% for case in featured_cases %}
+              <div class="card-container">
+                <div class="card-body">
+                  <h5 class="card-title" style="text-align: center;"><a href="admin/management/crime/{{case.id}}/">{{case.title}}</a></h5>
+                   <p class="card-desc" style="padding: 10px;text-align: left;font-size: 18px;">{{case.description}}</p>
+                   <div class="card-image">
+                    <img src="{{case.scene_image.url}}" alt="scene" class="mr-3" style="width: 50%;">
+                   </div>
+                   <br>
+                   <a href="admin/management/crime/{{case.id}}/" class="btn btn-primary">View Case</a>
+                </div>
+              </div>
+              {% endfor %}
+              </div>
+            </div>
+
+            <div class="card card-primary card-outline">
+              <div class="card-header">
+                <h5 class="m-0">Top Secret Cases</h5>
+              </div>
+              {%if secret_cases %}
+              {% for case in secret_cases %}
+              {% if request.user.is_superuser %}
+              <div class="card-container">
+                <div class="card-body">
+                  <h5 class="card-title" style="text-align: center;"><a href="admin/management/crime/{{case.id}}/">{{case.title}}</a></h5>
+                   <p class="card-desc" style="padding: 10px;text-align: left;font-size: 18px;">{{case.description}}</p>
+                   <div class="card-image">
+                    <img src="{{case.scene_image.url}}" alt="scene" class="mr-3" style="width: 50%;">
+                   </div>
+                   <br>
+                   <a href="admin/management/crime/{{case.id}}/" class="btn btn-primary">View Case</a>
+                </div>
+              </div>
+              {% else %}
+              <h3>You do not have required clearance to view top secret operations</h3>
+              {% endif %}
+              {% endfor %}
+              {%else%}
+              <h3>No top secret cases yet</h3>
+              {%endif%}
+              </div>
+            </div>
+          </div>
+          <!-- /.col-md-6 -->
+        </div>
+        <!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark">
+    <!-- Control sidebar content goes here -->
+    <div class="p-3">
+      <h5>Title</h5>
+      <p>Sidebar content</p>
+    </div>
+  </aside>
+  <!-- /.control-sidebar -->
+  {% endblock %}
